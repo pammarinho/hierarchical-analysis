@@ -29,13 +29,9 @@ from sklearn.metrics import f1_score, matthews_corrcoef, accuracy_score, classif
 
 # <h3>Train the models with classifiers</h3>
 # <ul>
-#     <li>SGD</li>
-#     <li>Gaussian NB</li>
-#     <li>Multinomial NB</li>
 #     <li>Decision Tree</li>
 #     <li>Random Forest</li>
 #     <li>Extra Trees</li>
-#     <li>Ada Boost"</li>
 # </ul>
 # 
 # <h3>Compare to use this metrics</h3>
@@ -54,16 +50,17 @@ logging.basicConfig(filename='log.log', level=logging.INFO, format='%(message)s'
 
 scores = pd.DataFrame()
 
-fold = 10
-cores = 40
-label = "global"
+fold = 10 #set with the fold quantity
+cores = 40 #set with the number of cores you have on the server that you are running
+label = "global" #choose a label to put on the files names
 classes = pd.DataFrame()
+target_column = "CLASS" #set with the target column name on the datasetd[]
 
 
 print("Reading file")
 logging.info("\nReading file")
-taxonomyTable = pd.read_csv("../../CATH_balanced.csv", sep=",", dtype={"CLASS": 'category'}, nrows=500)
-count = taxTools.Count(taxonomyTable, "CLASS")
+taxonomyTable = pd.read_csv("../CATH_balanced.csv", sep=",", dtype={target_column: 'category'}, nrows=500)
+count = taxTools.Count(taxonomyTable, target_column )
 
 try:
     dir = "/predict"       
@@ -73,7 +70,7 @@ except OSError:
     pass
 
 l=[]
-X, y_aux, yBin_aux = msL.PreProcessing(taxonomyTable, 'CLASS', count, l)
+X, y_aux, yBin_aux = msL.PreProcessing(taxonomyTable, target_column, count, l)
 indexs = X['Unnamed: 0']
 X = X.drop(columns=['Unnamed: 0'])
 label_encoder = LabelEncoder()
